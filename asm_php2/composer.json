@@ -1,0 +1,17 @@
+{
+    "name": "quang/asm_php2",
+    "author": [
+        {
+            "name": "Duy Quang",
+            "email": "workspace.quang@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "app\\": "./"
+        }
+    },
+    "require": {
+        "vlucas/phpdotenv": "^5.4"
+    }
+}

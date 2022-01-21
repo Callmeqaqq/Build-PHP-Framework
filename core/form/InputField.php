@@ -12,6 +12,7 @@ class InputField extends BaseField
     public const TYPE_NUMBER = 'number';
 
     public string $type;
+
     /**
      * @param Model $model
      * @param string $attribute
@@ -44,8 +45,8 @@ class InputField extends BaseField
     {
         return sprintf ('<input type="%s" name="%s" value="%s" class="form-control %s">',
             $this->type,
-            $this->attribute,
-            $this->model->{$this->attribute},
+            $this->attribute,// ex: this attribute is email
+            $this->model->{$this->attribute},//accessing email value, value get from properties '$email' in ContactForm
             $this->model->hasError ($this->attribute) ? 'is-invalid' : '',
         );
     }

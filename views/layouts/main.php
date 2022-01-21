@@ -1,11 +1,6 @@
 <?php
 
 use app\core\Application;
-
-/** @var $this \app\core\View  title */
-
-$this->title = 'Home';
-
 ?>
 <!doctype html>
 <html lang="en">

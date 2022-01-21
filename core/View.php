@@ -4,7 +4,7 @@ namespace app\core;
 
 class View
 {
-    public string $title = '$this->title is not set for this page';
+    public string $title = '$this->title is null';
 
     public function renderView($view, $params = [])
     {

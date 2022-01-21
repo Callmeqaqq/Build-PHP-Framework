@@ -4,22 +4,24 @@ namespace app\core\form;
 
 use app\core\Model;
 
-abstract class BaseField
+abstract class SelectField
 {
     public Model $model;
     public string $attribute;
+    public array $param;
 
     /**
      * @param Model $model
      * @param string $attribute
      */
-    public function __construct(Model $model, string $attribute)//get from any form's field
+    public function __construct(Model $model, string $attribute, array $params)//get from any form's field
     {
         $this->model = $model;
         $this->attribute = $attribute;
+        $this->param = $params;
     }
 
-    abstract public function renderInput(): string;
+    abstract public function renderOption(): string;
 
     public function __toString(): string
     {
@@ -27,13 +29,18 @@ abstract class BaseField
         return sprintf ('
             <div class="mb-3">
                 <label class="form-label">%s</label>
-                %s
+                <select name="%s" class="%s form-select">
+                <option value="">Choose...</option>
+                    %s
+                </select>
                 <div class="invalid-feedback">
                     %s
                 </div>
             </div>
         ', $this->model->getLabels ($this->attribute),
-            $this->renderInput (),
+            $this->attribute,
+            $this->model->hasError ($this->attribute) ? 'is-invalid' : '',
+            $this->renderOption (),
             $this->model->getFirstError ($this->attribute),//get first error of $email properties of ContactForm
         );
     }

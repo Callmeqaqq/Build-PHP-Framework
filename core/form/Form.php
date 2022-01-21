@@ -27,8 +27,8 @@ class Form
         return new TextareaField($model, $attribute);
     }
 
-    public function option(Model $model, $attribute)
+    public function select(Model $model, $attribute, $optionsTag)
     {
-        return new OptionField($model, $attribute);
+        return new OptionField($model, $attribute, $optionsTag);
     }
 }

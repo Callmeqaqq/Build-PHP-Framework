@@ -11,13 +11,10 @@ class SiteController extends Controller
 {
     public function home()
     {
-
         $params = [
             'test' => 'Duy Quang'
         ];
         return $this->render('home', $params);
-
-
     }
 
     public function contact(Request $request, Response $response)
@@ -33,9 +30,9 @@ class SiteController extends Controller
         return $this->render('contact',[
             'model' => $contact,
             'param' => [
-                'quang' => '2',
-                'Phuong' => 3,
-                'Phuong2' => 4
+                'Kid' => 1,
+                'Teen' => 2,
+                'Adult' => 3
             ]
         ]);
     }

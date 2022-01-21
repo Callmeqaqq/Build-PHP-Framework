@@ -37,7 +37,7 @@ class  Request
         return $this->method() === 'post';
     }
 
-    public function getBody()
+    public function getBody()//return submitted data from form
     {
         $body = [];
         if ($this->method() === 'get') {

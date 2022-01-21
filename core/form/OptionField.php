@@ -4,15 +4,26 @@ namespace app\core\form;
 
 use app\core\Model;
 
-class OptionField extends BaseField
+class OptionField extends SelectField
 {
-    public function __construct(Model $model, string $attribute)
+    public function __construct(Model $model, string $attribute, array $params)
     {
-        parent::__construct ($model, $attribute);
+        parent::__construct ($model, $attribute, $params);
+
     }
 
-    public function renderInput(): string
+    public function renderOption(): string
     {
-       return false;
+        $optionsList = '';
+        $inputValue = $this->model->{$this->attribute};
+        foreach ($this->param as $option => $value) {
+            $inputValue == $value ? $selected = 'selected' : $selected = '';
+            $optionsList .= sprintf ('<option %s value="%s">%s</option>',
+                $selected,
+                $value,
+                $option
+            );
+        }
+        return $optionsList;
     }
 }

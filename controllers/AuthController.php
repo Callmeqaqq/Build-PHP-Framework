@@ -14,6 +14,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
+//        $this->checkLoginMiddleware ();
         $this->registerMiddleware (new AuthMiddleware(['profile']));
     }
 
@@ -42,7 +43,6 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $error = [];
         $this->setLayout ('main2');
         $user = new User();
         if ($request->isPost ()) {
@@ -50,7 +50,7 @@ class AuthController extends Controller
             //next validation then execute on database
             if ($user->validate () && $user->save ()) {//if true
                 Application::$app->session->setFlash ('success', 'Thanks for registering!');
-                Application::$app->response->redirect ('/');
+                Application::$app->response->redirect ('/login');
                 exit;
             }
             return $this->render ('register', [

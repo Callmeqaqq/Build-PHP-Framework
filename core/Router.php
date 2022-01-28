@@ -4,6 +4,7 @@ namespace app\core;
 
 use app\core\exception\ForbiddenException;
 use app\core\exception\NotFoundException;
+use app\core\middlewares\CheckLoginMiddleware;
 
 class Router
 {
@@ -41,11 +42,11 @@ class Router
             return Application::$app->view->renderView ($callback);
         }
         if (is_array ($callback)) {
-            Application::$app->controller = new $callback[0]();
-            Application::$app->controller->action = $callback[1];
+            Application::$app->controller = new $callback[0]();//specify what controller is being implemented
+            Application::$app->controller->action = $callback[1];//for middleware
             $callback[0] = Application::$app->controller;
             foreach (Application::$app->controller->getMiddlewares () as $middleware) {
-                $middleware->execute ();
+                $middleware->execute ($this->response);
             }
         }
         return call_user_func ($callback, $this->request, $this->response);

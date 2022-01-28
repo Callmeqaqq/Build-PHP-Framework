@@ -10,7 +10,7 @@ $dotenv = Dotenv\Dotenv::createImmutable (dirname (__DIR__));
 $dotenv->load ();
 
 $config = [
-    'userClass' => \app\models\User::class,
+    'User()' => \app\models\User::class,//call user class
     'db' => [
         'dsn' => $_ENV['DB_DSN'],
         'user' => $_ENV['DB_USER'],
@@ -21,20 +21,16 @@ $config = [
 $app = new Application(dirname (__DIR__), $config);
 
 //route
-//1
+//==========================Site==============================
 $app->router->get ('/', [SiteController::class, 'home']);
 $app->router->get ('/contact', [SiteController::class, 'contact']);
 $app->router->post ('/contact', [SiteController::class, 'contact']);
-//2
+//=====================AUTHENTICATION=========================
 $app->router->get ('/login', [AuthController::class, 'login']);
 $app->router->post ('/login', [AuthController::class, 'login']);
 $app->router->get ('/profile', [AuthController::class, 'profile']);
 $app->router->get ('/register', [AuthController::class, 'register']);
 $app->router->post ('/register', [AuthController::class, 'register']);
 $app->router->get ('/logout', [AuthController::class, 'logout']);
-
-
-//other
-$app->router->get ('/user', 'user');
 
 $app->run ();

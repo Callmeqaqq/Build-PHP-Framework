@@ -9,6 +9,11 @@ use app\models\ContactForm;
 
 class SiteController extends Controller
 {
+    public function __construct()
+    {
+        $this->checkLoginMiddleware ();
+    }
+
     public function home()
     {
         $params = [

@@ -4,12 +4,12 @@ namespace app\core;
 
 use app\core\database\Database;
 use app\core\database\DatabaseModel;
+use app\core\middlewares\CheckLoginMiddleware;
 
 class Application
 {
     public static string $ROOT_DIR;
-
-    public string $userClass;
+    public string $callUserClass;
     public Router $router;
     public Request $request;
     public Response $response;
@@ -22,7 +22,7 @@ class Application
 
     public function __construct($rootPath, array $config)
     {
-        $this->userClass = $config['userClass'];//'userClass' => \app\models\User::class,
+        $this->callUserClass = $config['User()'];
         self::$ROOT_DIR = $rootPath;
         self::$app = $this;
         $this->request = new Request();
@@ -33,19 +33,13 @@ class Application
 
         $this->db = new Database($config['db']);
 
-        $this->user = new $this->userClass;//$this->user now can call method in DBModel
         $primaryValue = $this->session->get ('user');
         if ($primaryValue) {
-            $primaryKey = $this->user->primaryKey ();
-            $this->user = $this->user->findOne ([$primaryKey => $primaryValue]);
+            $primaryKey = $this->callUserClass::primaryKey ();
+            $this->user = $this->callUserClass::findOne ([$primaryKey => $primaryValue]);
         } else {
             $this->user = null;
         }
-    }
-
-    public static function isGuest(): bool
-    {
-        return !self::$app->user;//user doesn't exist
     }
 
     public function run()
@@ -54,13 +48,20 @@ class Application
             echo $this->router->resolve ();
         } catch (\Exception $e) {
             $this->response->setStatusCode ($e->getCode ());
+            $this->controller = new Controller();
+            $this->controller->setLayout ('_error');
             echo $this->view->renderView ('_404', [
                 'exception' => $e
             ]);
         }
     }
 
-    public function login(DatabaseModel $user)
+    public static function isGuest(): bool
+    {
+        return !self::$app->user;//?DatabaseModel $user doesn't exist, return true;
+    }
+
+    public function login(DatabaseModel $user): bool
     {
         $this->user = $user;
         $primaryKey = $user->primaryKey ();
@@ -74,7 +75,6 @@ class Application
         $this->user = null;
         $this->session->remove ('user');
     }
-
 
 //    /**
 //     * @return Controller
@@ -91,6 +91,5 @@ class Application
 //    {
 //        $this->controller = $controller;
 //    }
-
 
 }

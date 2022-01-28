@@ -7,7 +7,6 @@ use app\core\form\TextareaField;
 
 $this->title = 'Contact'
 ?>
-
 <h1>Contact us</h1>
 <?php $form = \app\core\form\Form::begin ('', 'post') ?>
 <?= $form->input ($model, 'subject') ?>

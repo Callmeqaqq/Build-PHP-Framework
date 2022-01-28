@@ -14,12 +14,7 @@ class  Request
             return $path;//return '/'
         }
         //return string form [0] of PATH to position just get before
-        $result = substr($path, 0, $position);
-        echo '<pre>';
-        var_dump($result);
-        echo'</pre>';
-        exit;
-        return $result;
+        return substr($path, 0, $position);
     }
 
     public function method()

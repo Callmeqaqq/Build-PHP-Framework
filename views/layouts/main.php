@@ -1,6 +1,7 @@
 <?php
 
 use app\core\Application;
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -17,40 +18,26 @@ use app\core\Application;
 </head>
 <body>
 <!--navbar-->
-<div class="container d-flex">
+<div class="d-flex bg-dark">
     <ul class="nav me-auto">
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/">home</a>
+            <a class="nav-link active" aria-current="page" href="/">HOME</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/user">user</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/contact">contact</a>
+            <a class="nav-link" href="/contact">CONTACT</a>
         </li>
     </ul>
-    <?php if (Application::isGuest ()): ?>
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="/login">login</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/register">register</a>
-            </li>
-        </ul>
-    <?php else: ?>
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="/profile">Profile</a>
-            </li>
-        </ul>
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="/logout">Welcome <?php echo Application::$app->user->getDisplayName () ?>
-                    (Logout)</a>
-            </li>
-        </ul>
-    <?php endif; ?>
+    <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link" href="/profile">PROFILE</a>
+        </li>
+    </ul>
+    <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link" href="/logout">WELLCOME <?php echo Application::$app->user->getDisplayName () ?>
+                (LOGOUT)</a>
+        </li>
+    </ul>
 </div>
 
 <div class="container">

@@ -13,6 +13,15 @@
 </head>
 <body>
 <div class="container">
+    <?php
+
+    use app\core\Application;
+
+    if (Application::$app->session->getFlash ('success')):?>
+        <div class="alert alert-success">
+            <?= Application::$app->session->getFlash ('success') ?>
+        </div>
+    <?php endif; ?>
     {{content}}
 </div>
 <!-- Optional JavaScript; choose one of the two! -->

@@ -29,8 +29,7 @@ class LoginForm extends Model
     public function login()
     {
         //in finOne(), static::tableName will action on table users by class User
-        $user = new User;
-        $user = $user->findOne (['email' => $this->email]);
+        $user = User::findOne (['email' => $this->email]);
         if (!$user) {
             $this->addError ('email', 'User does not exist with this email');
             return false;
@@ -39,20 +38,6 @@ class LoginForm extends Model
             $this->addError ('password', 'Password is incorrect');
             return false;
         }
-        //var_dump($user);
-        //object(app\models\User)#22 (8) {
-        //  ["email"]=>
-        //  ["password"]=>
-        //  ["confirmPassword"]=>
-        //  ["name"]=>
-        //  ["status"]=>
-        //  ["errors"]=>
-        //  array(0) {
-        //  }
-        //  ["id"]=>
-        //  ["created_at"]=>
-        //}
-        //pass all of those to login()
         return Application::$app->login ($user);
     }
 }

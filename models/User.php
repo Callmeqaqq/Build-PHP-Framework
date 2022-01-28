@@ -20,19 +20,28 @@ class User extends UserSpecificModel
     public int $status = self::STATUS_INACTIVE;
 
     //name of table on database, for DatabaseModel
-    public function tableName(): string
+    public static function tableName(): string
     {
         return 'users';
     }
 
-    public function primaryKey(): string
+    //attributes for DatabaseModel
+    public static function attributes(): array
+    {
+        return [
+            'email', 'name', 'status', 'password',//because id is auto increase, so we don't need to implement here
+        ];
+    }
+
+    public static function primaryKey(): string
     {
         return 'id';
     }
 
     //action to database
-    public function save()
+    public function save()//register
     {
+        //handle what we're going to insert into database
         $this->status = self::STATUS_INACTIVE;
         $this->password = password_hash ($this->password, PASSWORD_DEFAULT);
         return parent::save ();
@@ -46,14 +55,6 @@ class User extends UserSpecificModel
             'name' => [self::RULE_REQUIRED, [self::RULE_MIN, 'min' => 5], [self::RULE_MAX, 'max' => 100]],
             'password' => [self::RULE_REQUIRED, [self::RULE_MIN, 'min' => 6]],
             'confirmPassword' => [self::RULE_REQUIRED, [self::RULE_MATCH, 'match' => 'password']],
-        ];
-    }
-
-    //attributes for DatabaseModel
-    public function attributes(): array
-    {
-        return [
-            'email', 'name', 'status', 'password',
         ];
     }
 

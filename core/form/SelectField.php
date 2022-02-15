@@ -30,7 +30,7 @@ abstract class SelectField
             <div class="mb-3">
                 <label class="form-label">%s</label>
                 <select name="%s" class="%s form-select">
-                <option value="">Choose...</option>
+                <option selected disabled>Choose...</option>
                     %s
                 </select>
                 <div class="invalid-feedback">

@@ -41,4 +41,9 @@ class SiteController extends Controller
             ]
         ]);
     }
+
+    public function profile()
+    {
+        return $this->render ('profile');
+    }
 }

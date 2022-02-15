@@ -50,7 +50,30 @@ abstract class DatabaseModel extends Model
         return $stmt->fetchObject (static::class);
     }
 
-    public function getAll()
+    static public function findSomething($something, $where)
+    {
+
+    }
+
+    static public function findAllWhere($where)
+    {
+        $tableName = static::tableName ();
+        $attribute = array_keys ($where);
+        $sql = implode ("AND ", array_map (fn($attr) => "$attr = :$attr", $attribute));
+        $stmt = self::prepare ("SELECT * FROM $tableName WHERE $sql");
+        foreach ($where as $key => $item) {//$key = email, $item = quang@domain.com
+            $stmt->bindValue (":$key", $item);
+        }
+        $stmt->execute ();
+        return $stmt->fetchAll ();
+    }
+
+    static public function lastRowInsert($where)
+    {
+
+    }
+
+    static public function update($where)
     {
 
     }

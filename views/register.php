@@ -3,6 +3,8 @@
 
 /** @var $model User */
 
+/** @var $param \app\controllers\AuthController  title */
+
 use app\core\form\Form;
 use app\models\User;
 
@@ -22,7 +24,7 @@ use app\models\User;
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/auth/login.css">
 </head>
-<body>
+<body style="padding-bottom: 20px">
 <section class="">
     <div class="container">
         <div class="row justify-content-center">
@@ -53,6 +55,7 @@ use app\models\User;
                         <?php $form = Form::begin ('', 'post') ?>
                         <?php echo $form->input ($model, 'name') ?>
                         <?php echo $form->input ($model, 'email') ?>
+                        <?= $form->select ($model, 'status', $param) ?>
                         <div class="row">
                             <div class="col"><?php echo $form->input ($model, 'password')->passwordField () ?></div>
                             <div class="col"><?php echo $form->input ($model, 'confirmPassword')->passwordField () ?></div>

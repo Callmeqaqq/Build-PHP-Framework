@@ -9,7 +9,6 @@ class OptionField extends SelectField
     public function __construct(Model $model, string $attribute, array $params)
     {
         parent::__construct ($model, $attribute, $params);
-
     }
 
     public function renderOption(): string

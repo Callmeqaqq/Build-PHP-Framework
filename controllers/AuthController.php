@@ -14,8 +14,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-//        $this->checkLoginMiddleware ();
-        $this->registerMiddleware (new AuthMiddleware(['profile']));
+
     }
 
     public function login(Request $request, Response $response)
@@ -54,16 +53,19 @@ class AuthController extends Controller
                 exit;
             }
             return $this->render ('register', [
-                'model' => $user
+                'model' => $user,
+                'param' => [
+                    'Member' => User::STATUS_MEMBER,
+                    'Mentor' => User::STATUS_MENTOR
+                ]
             ]);
         }
         return $this->render ('register', [
-            'model' => $user
+            'model' => $user,
+            'param' => [
+                'Member' => User::STATUS_MEMBER,
+                'Mentor' => User::STATUS_MENTOR
+            ]
         ]);
-    }
-
-    public function profile()
-    {
-        return $this->render ('profile');
     }
 }

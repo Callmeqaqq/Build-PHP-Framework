@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\core\Application;
+use app\core\database\QueryBuilder;
 use app\core\Model;
 
 class LoginForm extends Model
@@ -30,6 +31,9 @@ class LoginForm extends Model
     {
         //in finOne(), static::tableName will action on table users by class User
         $user = User::findOne (['email' => $this->email]);
+//        $user = QueryBuilder::table ('users')
+//            ->where ('email', '=', $this->email)
+//            ->first ();
         if (!$user) {
             $this->addError ('email', 'User does not exist with this email');
             return false;

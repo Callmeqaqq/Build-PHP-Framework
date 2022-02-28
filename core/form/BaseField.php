@@ -8,6 +8,7 @@ abstract class BaseField
 {
     public Model $model;
     public string $attribute;
+    public string $inputAttribute;
 
     /**
      * @param Model $model

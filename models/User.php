@@ -42,7 +42,6 @@ class User extends UserSpecificModel
     public function save()//register
     {
         //handle what we're going to insert into database
-//        $this->status = self::STATUS_MEMBER;
         $this->password = password_hash ($this->password, PASSWORD_DEFAULT);
         return parent::save ();
     }

@@ -17,9 +17,9 @@ class Form
         echo '</form>';
     }
 
-    public function input(Model $model, $attribute)
+    public function input(Model $model, $attribute, $inputAttribute = '')
     {
-        return new InputField($model, $attribute);
+        return new InputField($model, $attribute, $inputAttribute);
     }
 
     public function textarea(Model $model, $attribute)

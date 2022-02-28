@@ -4,7 +4,6 @@ namespace app\core;
 
 use app\core\database\Database;
 use app\core\database\DatabaseModel;
-use app\core\middlewares\CheckLoginMiddleware;
 
 class Application
 {
@@ -19,6 +18,8 @@ class Application
     public Controller $controller;
     public ?DatabaseModel $user;//question mark that mean $user might be null as guest, not login
     public View $view;
+    public string $userId;
+    public string $access;
 
     public function __construct($rootPath, array $config)
     {
@@ -30,7 +31,6 @@ class Application
         $this->session = new Session();
         $this->router = new Router($this->request, $this->response);
         $this->view = new View();
-
         $this->db = new Database($config['db']);
 
         $primaryValue = $this->session->get ('user');
@@ -60,6 +60,13 @@ class Application
     {
         return !self::$app->user;//?DatabaseModel $user doesn't exist, return true;
     }
+
+    public function access($access)
+    {
+        $this->access = $access;
+        return true;
+    }
+
 
     public function login(DatabaseModel $user): bool
     {

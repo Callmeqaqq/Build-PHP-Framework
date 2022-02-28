@@ -16,7 +16,6 @@ class Controller
     protected array $middlewares = [];
 
 
-
     public function render($view, $params = [])
     {
         return Application::$app->view->renderView ($view, $params);
@@ -30,13 +29,6 @@ class Controller
     public function registerMiddleware(BaseMiddleware $middleware)
     {
         $this->middlewares[] = $middleware;
-    }
-
-    public function checkLoginMiddleware(){
-        if (Application::isGuest ()) {
-            header ('Location: /login');
-            exit;
-        }
     }
 
     /**

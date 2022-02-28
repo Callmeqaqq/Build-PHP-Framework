@@ -1,18 +1,12 @@
 <?php
-//declare variable $model is instance of Class User in app\models\user
-
 /** @var $model User */
+/** @var $param \app\controllers\AuthController */
 
-/** @var $param \app\controllers\AuthController  title */
+/** @var $model \app\models\User */
 
 use app\core\form\Form;
 use app\models\User;
 
-?>
-
-
-<?php
-/**@var $model \app\models\User */
 ?>
 <!doctype html>
 <html lang="en">

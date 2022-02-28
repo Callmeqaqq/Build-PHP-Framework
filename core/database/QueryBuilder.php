@@ -13,13 +13,14 @@ class QueryBuilder
     private bool $distinct = false;
     private array $joins;
     private array $wheres;
-    private string $like;
     private array $groups;
     private array $havings;
     private array $orders;
     private int $limit;
     private int $offset;
     private array $bindValue = [];
+    private array $questionMarkValue = [];
+    private bool $in = false;
 
     public function __construct($tableName)
     {
@@ -59,22 +60,22 @@ class QueryBuilder
         return $this->join ($table, $first, $operator, $second, 'right');
     }
 
-    public function where($columns, $operator, $value, $concatOperator = 'and'): static
+    public function where($column, $operator, $value, $concatOperator = 'and'): static
     {
-        $this->wheres[] = [$concatOperator, $columns, $operator, $value];
+        if ($operator === strtolower ('in')) {
+            $this->in = true;
+        }
+        $this->wheres[] = [$concatOperator, $column, $operator, $value];
         return $this;
     }
 
     public function orWhere($columns, $operator, $value): static
     {
+        if ($operator === strtolower ('in')) {
+            $this->in = true;
+        }
         return $this->where ($columns, $operator, $value, 'or');
     }
-
-//    public function like($param): static
-//    {
-//        $this->like = $param;
-//        return $this;
-//    }
 
     public function groupBy($columns): static
     {
@@ -112,7 +113,7 @@ class QueryBuilder
     }
 
     //================ Statement ===============
-    public function get($firstRowCheck = false)
+    public function get($firstRowCheck = false, $lastRowCheck = false)
     {
         if (empty($this->from)) {
             return false;
@@ -133,9 +134,9 @@ class QueryBuilder
             foreach ($this->joins as $join) {
                 //[0] = table, [1] = first value, [2] = operator, [3] = second value, [4] = type join
                 $sql .= match (strtolower ($join[4])) {
-                    'left' => 'LEFT JOIN',
-                    'right' => 'RIGHT JOIN',
-                    default => 'INNER JOIN',
+                    'left' => ' LEFT JOIN',
+                    'right' => ' RIGHT JOIN',
+                    default => ' INNER JOIN',
                 };
                 $sql .= " $join[0] ON $join[1] $join[2] $join[3]";
             }
@@ -145,10 +146,6 @@ class QueryBuilder
             $sql .= ' WHERE';
             $sql .= $this->handleWhere ();
         }
-
-//        if(isset($this->like)){
-//            $sql .= " LIKE CONCAT('%', :var1, '%')";
-//        }
 
         if (isset($this->groups)) {
             $sql .= ' GROUP BY' . implode (' ,', $this->groups);
@@ -171,35 +168,52 @@ class QueryBuilder
                 if ($key > 0) {
                     $sql .= ', ';
                 }
-                $sql .= " $order[0] $order[1]";
+                $sql .= " $order[0] " . strtoupper ($order[1]);
             }
         }
-
         if ($firstRowCheck == true) {
             $sql .= " LIMIT 1";
         } else if (isset($this->limit)) {
-            $sql .= " LIMIT :$this->limit";
+            $sql .= " LIMIT $this->limit";
         }
 
         if (isset($this->offset)) {
             $sql .= " OFFSET $this->offset";
         }
-
         try {
             $stmt = self::prepare ($sql);
-            if($stmt->execute ($this->bindValue)){
-                return $stmt->fetchObject ();
-            }else{
-                return false;
+            if ($this->in === true) {
+                if ($stmt->execute ($this->questionMarkValue)) {
+                    if ($firstRowCheck == true) {
+                        return $stmt->fetch ();
+                    }
+                    return $stmt->fetchAll ();
+                } else {
+                    return false;
+                }
+            } else {
+                if ($stmt->execute ($this->bindValue)) {
+                    if ($firstRowCheck == true) {
+                        return $stmt->fetch ();
+                    }
+                    return $stmt->fetchAll ();
+                } else {
+                    return false;
+                }
             }
         } catch (\Exception $e) {
-            die("Oh no! There's an error in the query!");
+            die($e);
         }
     }
 
-    public function first()
+    public function first($first = true, $last = false)
     {
-        return $this->get (true);
+        return $this->get ($first, $last);
+    }
+
+    public function lastInsert()
+    {
+        return $this->first (false, true);
     }
 
     public function insert(array $columnsAndValue)
@@ -218,7 +232,7 @@ class QueryBuilder
             $stmt->execute ($columnsAndValue);
             return true;
         } catch (\Exception $e) {
-            die("Oh no! There's an error in the query!");
+            die($e);
         }
     }
 
@@ -251,7 +265,7 @@ class QueryBuilder
             $stmt->execute ($columnsAndValue);
             return true;
         } catch (\Exception $e) {
-            die("Oh no! There's an error in the query!");
+            die($e);
         }
     }
 
@@ -267,8 +281,7 @@ class QueryBuilder
             $stmt->execute ($this->bindValue);
             return true;
         } catch (\Exception $e) {
-            die("Oh no! There's an error in the query!");
-
+            die($e);
         }
     }
 
@@ -277,13 +290,31 @@ class QueryBuilder
         $sqlWhere = '';
         foreach ($this->wheres as $key => $where) {
             //[0] = concat operator, [1] = columns, [2] = operator, [3] = value
+            $where[2] = strtoupper ($where[2]);
             if ($key > 0) {
                 $sqlWhere .= (strtolower ($where[0]) === 'and') ? ' AND' : ' OR';
             }
-            $currentBind = ["$where[1]OfWHERE" => $where[3]];
+            if ($where[2] === 'LIKE') {
+                $currentBind = ["$where[1]OfWHERE" => "%$where[3]%"];
+            } else if ($where[2] === '%LIKE') {
+                $currentBind = ["$where[1]OfWHERE" => "%$where[3]"];
+            } else if ($where[2] === 'LIKE%') {
+                $currentBind = ["$where[1]OfWHERE" => "$where[3]%"];
+            } else if (isset($this->joins)) {
+                $currentBind = ["$where[1]" => $where['3']];
+            } else {
+                $currentBind = ["$where[1]OfWHERE" => $where[3]];
+            }
             //add Where before named placeholder for not get same key error array when bind
             $this->bindValue += $currentBind;
-            $sqlWhere .= " $where[1] $where[2] :$where[1]OfWHERE";
+            if ($where[2] === 'IN') {
+                $sqlWhere .= " $where[1] " . $where[2] . '(' . implode (',', array_fill (0, count ($where[3]), '?')) . ')';
+                $this->questionMarkValue = $where[3];
+            } else if (isset($this->joins)) {
+                $sqlWhere .= " $where[1] " . $where[2] . " :$where[1]";
+            } else {
+                $sqlWhere .= " $where[1] " . $where[2] . " :$where[1]OfWHERE";
+            }
         }
         return $sqlWhere;
     }

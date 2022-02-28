@@ -44,6 +44,9 @@ class SiteController extends Controller
 
     public function profile()
     {
-        return $this->render ('profile');
+        $userInfo = Application::$app->user;
+        return $this->render ('profile',[
+            'info' => $userInfo
+        ]);
     }
 }

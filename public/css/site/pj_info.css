@@ -1,0 +1,112 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.avatars {
+    list-style-type: none;
+    display: flex;
+    margin-bottom: 0;
+}
+
+.avatars img {
+    width: 42px;
+    border-radius: 50%;
+}
+
+.member {
+    margin-bottom: 30px;
+}
+
+.add {
+    border-radius: 50%;
+    margin-left: 10px;
+}
+
+#dropdown {
+    list-style-type: none;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: left;
+    padding: 0;
+    margin-top: 5px;
+}
+
+#dropdown li span {
+    display: block;
+    padding: 8px;
+    text-decoration: none;
+    color: #007bff;
+}
+
+#dropdown li span:hover {
+    background: #f3f3f3;
+}
+
+#dropdown-2 {
+    list-style-type: none;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: left;
+    padding: 0;
+    margin-top: 5px;
+}
+
+#dropdown-2 li span {
+    display: block;
+    padding: 8px;
+    text-decoration: none;
+    color: #007bff;
+}
+
+#dropdown-2 li span:hover {
+    background: #f3f3f3;
+}
+
+body {
+    font-family: "Lato";
+    margin: 0;
+    padding: 0;
+}
+
+#myKanban {
+    overflow-x: auto;
+    padding: 20px 0;
+}
+
+.info, .working, .test, .error, .finished {
+    color: #ffffff;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.info {
+    background: #7e57c2;
+}
+
+.working {
+    background: #5c6bc0;
+}
+
+.test {
+    background: #ffa319;
+}
+
+.error {
+    background: #ef5350;
+}
+
+.finished {
+    background: #66bb6a;
+}
+
+.custom-button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 7px 15px;
+    margin: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
